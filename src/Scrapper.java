@@ -102,5 +102,7 @@ public class Scrapper {
 		}
 		
 		csv_writer.close();
+		
+		System.out.println("Scrapping Successful");
 	}
 }
