@@ -1,5 +1,6 @@
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -54,13 +55,16 @@ public class Scrapper {
 		FileOutputStream fos = new FileOutputStream("./images/" + dest_name);
 		fos.write(response);
 		fos.close();
-		
-		return dest_name;
+		// get the absolute pathname of the image file.
+		File file = new File("./images/" + dest_name);
+		return file.getAbsolutePath();
 		
 	}
 
 	
 	public static void main(String[] args) throws IOException {
+		
+		System.out.println("Scrapping Started");
 		ArrayList<String> category_items = getItems();
 		ArrayList<String[]> csv_output = new ArrayList<String[]> ();
 		for (String item : category_items) {
@@ -69,13 +73,11 @@ public class Scrapper {
 				final Document document = Jsoup.connect(url).get();
 				String item_name = document.select("h1.firstHeading").text();
 				String item_description = document.select("div.mw-parser-output p").first().text();
-				String f_name;
-				String image_path = "C:\\Users\\Bibhas\\Desktop\\example\\Web_scrapper\\images\\";
+				String image_path = "";
 				String image_url = document.select("table.infobox").select("table.infobox:nth-of-type(1)").select("tbody").select("tr:nth-of-type(2)").select("th").select("a").select("img").attr("src");
 				try {
 					if (!image_url.equals("")) {
-						f_name = saveImage(image_url);
-						image_path += f_name;
+						image_path = saveImage(image_url);
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
